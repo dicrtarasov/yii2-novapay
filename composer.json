@@ -4,6 +4,7 @@
     "license": "MIT",
     "homepage": "https://gitlab.com/dicr/yii2-novapay",
     "description": "API Novapay для Yii2",
+    "keywords": ["dicr", "yii2", "payment", "novapay"],
     "authors": [
         {
             "name": "Igor Tarasov",
@@ -12,7 +13,6 @@
             "role": "developer"
         }
     ],
-    "keywords": ["dicr", "yii2", "payment", "novapay"],
     "support": {
         "source": "https://gitlab.com/dicr/yii2-novapay.git"
     },

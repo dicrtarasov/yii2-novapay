@@ -2,8 +2,8 @@
 /*
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
- * @license proprietary
- * @version 23.08.20 01:38:07
+ * @license MIT
+ * @version 23.08.20 02:46:44
  */
 
 declare(strict_types = 1);
