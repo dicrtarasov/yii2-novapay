@@ -1,0 +1,133 @@
+<?php
+/*
+ * @copyright 2019-2020 Dicr http://dicr.org
+ * @author Igor A Tarasov <develop@dicr.org>
+ * @license proprietary
+ * @version 23.08.20 01:40:50
+ */
+
+declare(strict_types = 1);
+
+namespace dicr\novapay\request;
+
+use dicr\novapay\NovaPayRequest;
+use yii\base\Exception;
+use yii\helpers\Json;
+
+use function is_array;
+
+/**
+ * Creates payment session.
+ */
+class SessionRequest extends NovaPayRequest
+{
+    /** @var string */
+    public $firstName;
+
+    /** @var string */
+    public $lastName;
+
+    /** @var string отчество */
+    public $patronymic;
+
+    /** @var string phone in international format */
+    public $phone;
+
+    /** @var ?string optional email address to send a payment recipe to (can be edited by payer) */
+    public $email;
+
+    /** @var ?array any data one needs to be returned in post-backs */
+    public $metadata;
+
+    /**
+     * @var ?string url for receiving session status post-backs (server-server).
+     * Если не задан, то модуль устанавливает свой обработчик.
+     * @see NovaPayModule::callback
+     */
+    public $callbackUrl;
+
+    /** @var ?string optional url for button “return to the shop” on payment status page */
+    public $successUrl;
+
+    /** @var ?string optional url for button “return to the shop” on payment status page */
+    public $failUrl;
+
+    /**
+     * @inheritDoc
+     */
+    public function rules()
+    {
+        return [
+            ['firstName', 'trim'],
+            ['firstName', 'required'],
+
+            ['lastName', 'trim'],
+            ['lastName', 'required'],
+
+            ['patronymic', 'trim'],
+            ['patronymic', 'required'],
+
+            ['phone', 'trim'],
+            ['phone', 'required'],
+
+            ['email', 'trim'],
+            ['email', 'default'],
+            ['email', 'email'],
+
+            ['metadata', 'default'],
+            ['metadata', function (string $attribute) {
+                if (! is_array($this->metadata)) {
+                    $this->addError($attribute, 'Метаданные должны быть массивом');
+                }
+            }],
+
+            [['callbackUrl', 'successUrl', 'failUrl'], 'trim'],
+            [['callbackUrl', 'successUrl', 'failUrl'], 'default'],
+            [['callbackUrl', 'successUrl', 'failUrl'], 'url']
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function func(): string
+    {
+        return 'session';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function data(): array
+    {
+        return [
+            'client_first_name' => $this->firstName,
+            'client_last_name' => $this->lastName,
+            'client_patronymic' => $this->patronymic,
+            'client_phone' => $this->phone,
+            'client_email' => $this->email,
+            'metadata' => $this->metadata,
+            'callback_url' => $this->callbackUrl,
+            'success_url' => $this->successUrl,
+            'fail_url' => $this->failUrl
+        ];
+    }
+
+    /**
+     * Отправляет запрос.
+     *
+     * @return string ID сессии
+     * @throws Exception
+     */
+    public function send(): string
+    {
+        $data = parent::send();
+
+        $sessionId = (string)($data['id'] ?? '');
+        if ($sessionId === '') {
+            throw new Exception('Не получены данные сессии: ' . Json::encode($data));
+        }
+
+        return $sessionId;
+    }
+}
