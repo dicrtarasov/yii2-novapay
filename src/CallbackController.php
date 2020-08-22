@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 23.08.20 02:49:16
+ * @version 23.08.20 02:59:42
  */
 
 declare(strict_types = 1);
@@ -14,6 +14,7 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\ServerErrorHttpException;
 
+use function base64_decode;
 use function call_user_func;
 use function openssl_error_string;
 use function openssl_pkey_free;
@@ -47,7 +48,7 @@ class CallbackController extends Controller
             Yii::$app->request->headers->get('x-sign')
         );
 
-        Yii::debug('NovaPay callback: ' . Yii::$app->request->rawBody);
+        Yii::debug('NovaPay callback: ' . Yii::$app->request->rawBody, __METHOD__);
 
         if (! empty($this->module->callback)) {
             $request = new CallbackRequest([
@@ -75,7 +76,7 @@ class CallbackController extends Controller
         }
 
         try {
-            $ret = openssl_verify($data, $sign, $key);
+            $ret = openssl_verify($data, base64_decode($sign), $key);
             if ($ret === 0) {
                 throw new BadRequestHttpException('Некорректная сигнатура');
             }

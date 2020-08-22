@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 23.08.20 02:46:44
+ * @version 23.08.20 02:57:27
  */
 
 declare(strict_types = 1);
@@ -122,7 +122,7 @@ class PaymentRequest extends NovaPayRequest
 
         $url = (string)($data['url'] ?? '');
         if ($url === '') {
-            throw new Exception('Не получен url для оплаты: ' . Json::encode($data));
+            throw new Exception('Не получен URL для оплаты: ' . Json::encode($data));
         }
 
         return $url;

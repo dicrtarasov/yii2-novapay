@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 23.08.20 02:46:44
+ * @version 23.08.20 02:59:04
  */
 
 declare(strict_types = 1);
@@ -126,7 +126,7 @@ abstract class NovaPayRequest extends Model
         });
 
         // добавляем merchant_id из модуля
-        if (empty($data['merchant_id'])) {
+        if (! isset($data['merchant_id'])) {
             $data['merchant_id'] = $this->_module->merchantId;
         }
 
