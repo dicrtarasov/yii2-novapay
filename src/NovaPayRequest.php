@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 23.08.20 02:59:04
+ * @version 23.08.20 14:50:25
  */
 
 declare(strict_types = 1);
@@ -132,7 +132,7 @@ abstract class NovaPayRequest extends Model
 
         // добавляем callback_url модуля (только для режима web-приложения)
         if (! isset($data['callback_url'])) {
-            $data['callback_url'] = Url::to($this->_module->uniqueId . '/callback', true);
+            $data['callback_url'] = Url::to('/' . $this->_module->uniqueId . '/callback', true);
         }
 
         // кодируем данные в JSON
