@@ -13,11 +13,13 @@ namespace dicr\novapay\request;
 use dicr\novapay\Delivery;
 use dicr\novapay\NovaPayRequest;
 use dicr\novapay\Product;
+use dicr\validate\PhoneValidator;
 use dicr\validate\ValidateException;
 use yii\base\Exception;
 use yii\helpers\Json;
 
 use function is_array;
+use function preg_replace;
 
 /**
  * Payments via precoded frames.
@@ -111,6 +113,11 @@ class FramesInitRequest extends NovaPayRequest
 
             ['phone', 'trim'],
             ['phone', 'default'],
+            ['phone', PhoneValidator::class, 'country' => 38, 'region' => 44, 'skipOnEmpty' => true],
+            ['phone', 'filter', 'filter' => function ($val) {
+                return '+' . (int)preg_replace('~[\D]+~', '', (string)$val);
+            }, 'skipOnEmpty' => true],
+
 
             ['email', 'trim'],
             ['email', 'default'],
