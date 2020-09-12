@@ -10,6 +10,8 @@ declare(strict_types = 1);
 
 namespace dicr\novapay;
 
+use RuntimeException;
+use Throwable;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\Module;
@@ -19,6 +21,8 @@ use yii\web\JsonParser;
 
 use function array_merge;
 use function is_callable;
+use function ob_end_clean;
+use function ob_get_level;
 
 /**
  * Модуль Novapay.
@@ -115,5 +119,23 @@ class NovaPayModule extends Module implements NovaPay
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return Yii::createObject($config, [$this]);
+    }
+
+    /**
+     * Переадресация на страницу оплаты.
+     *
+     * @param string $url платежный URL
+     */
+    public static function redirectCheckout(string $url) : void
+    {
+        while (ob_get_level() > 0) {
+            ob_end_clean();
+        }
+
+        try {
+            Yii::$app->end(0, Yii::$app->response->redirect($url));
+        } catch (Throwable $ex) {
+            throw new RuntimeException('Неизвестная ошибка');
+        }
     }
 }
