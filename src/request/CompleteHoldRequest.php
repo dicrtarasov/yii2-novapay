@@ -26,7 +26,7 @@ class CompleteHoldRequest extends NovaPayRequest
     /**
      * @inheritDoc
      */
-    public function rules()
+    public function rules() : array
     {
         return [
             ['sessionId', 'trim'],

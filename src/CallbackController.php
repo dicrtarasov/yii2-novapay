@@ -36,7 +36,7 @@ class CallbackController extends Controller
      *
      * @throws BadRequestHttpException|ServerErrorHttpException
      */
-    public function actionIndex()
+    public function actionIndex() : void
     {
         if (! Yii::$app->request->isPost) {
             throw new BadRequestHttpException();

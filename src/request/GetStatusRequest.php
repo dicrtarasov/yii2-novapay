@@ -28,7 +28,7 @@ class GetStatusRequest extends NovaPayRequest implements NovaPay
     /**
      * @inheritDoc
      */
-    public function rules()
+    public function rules() : array
     {
         return [
             ['sessionId', 'trim'],
@@ -39,7 +39,7 @@ class GetStatusRequest extends NovaPayRequest implements NovaPay
     /**
      * @inheritDoc
      */
-    protected function func(): string
+    protected function func() : string
     {
         return 'get-status';
     }
@@ -47,7 +47,7 @@ class GetStatusRequest extends NovaPayRequest implements NovaPay
     /**
      * @inheritDoc
      */
-    protected function data(): array
+    protected function data() : array
     {
         return [
             'session_id' => $this->sessionId
@@ -60,7 +60,7 @@ class GetStatusRequest extends NovaPayRequest implements NovaPay
      * @return string статус сессии.
      * @throws Exception
      */
-    public function send(): string
+    public function send() : string
     {
         $data = parent::send();
 

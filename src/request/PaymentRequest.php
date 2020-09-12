@@ -47,7 +47,7 @@ class PaymentRequest extends NovaPayRequest
     /**
      * @inheritDoc
      */
-    public function rules()
+    public function rules() : array
     {
         return [
             ['sessionId', 'trim'],
@@ -106,7 +106,7 @@ class PaymentRequest extends NovaPayRequest
                 return $prod->data;
             }, $this->products ?: []) ?: null,
             'use_hold' => $this->useHold,
-            'delivery' => $this->delivery ? $this->delivery->data : null
+            'delivery' => $this->delivery->data ?? null
         ];
     }
 

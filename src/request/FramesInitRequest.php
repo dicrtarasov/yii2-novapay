@@ -72,7 +72,7 @@ class FramesInitRequest extends NovaPayRequest
     /**
      * @inheritDoc
      */
-    public function rules()
+    public function rules() : array
     {
         return [
             ['firstName', 'trim'],
@@ -159,7 +159,7 @@ class FramesInitRequest extends NovaPayRequest
             'products' => array_map(static function (Product $prod) {
                 return $prod->data;
             }, $this->products ?: []) ?: null,
-            'delivery' => $this->delivery ? $this->delivery->data : null
+            'delivery' => $this->delivery->data ?? null
         ];
     }
 

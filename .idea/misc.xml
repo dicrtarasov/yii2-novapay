@@ -9,4 +9,10 @@
     <customRepositories />
     <composerUpdateOptions />
   </component>
+  <component name="PhpEntryPointsManager">
+    <entry_point>
+      <entry_point TYPE="phpClass" FQNAME="\dicr\novapay\CallbackController" />
+    </entry_point>
+    <pattern value="\dicr\novapay\CallbackController" />
+  </component>
 </project>

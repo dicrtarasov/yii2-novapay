@@ -51,14 +51,14 @@ abstract class NovaPayRequest extends Model
      *
      * @return string
      */
-    abstract protected function func(): string;
+    abstract protected function func() : string;
 
     /**
      * Данные для JSON.
      *
      * @return array
      */
-    protected function data(): array
+    protected function data() : array
     {
         return $this->attributes;
     }
@@ -68,7 +68,7 @@ abstract class NovaPayRequest extends Model
      *
      * @return string[]
      */
-    private static function opensslErrors(): array
+    private static function opensslErrors() : array
     {
         $errors = [];
 
@@ -86,7 +86,7 @@ abstract class NovaPayRequest extends Model
      * @return string
      * @throws Exception
      */
-    private function createSign(string $json): string
+    private function createSign(string $json) : string
     {
         $pk = openssl_pkey_get_private($this->_module->clientKey);
         if ($pk === false) {
@@ -111,7 +111,7 @@ abstract class NovaPayRequest extends Model
     /**
      * Отправляет запрос NovaPay.
      *
-     * @return mixed ответ сервера
+     * @return mixed ответ сервера (переопределяется в наследнике)
      * @throws Exception
      */
     public function send()

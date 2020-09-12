@@ -52,7 +52,7 @@ class NovaPayModule extends Module implements NovaPay
      * @inheritDoc
      * @throws InvalidConfigException
      */
-    public function init()
+    public function init() : void
     {
         parent::init();
 
@@ -111,7 +111,7 @@ class NovaPayModule extends Module implements NovaPay
      * @return NovaPayRequest
      * @throws InvalidConfigException
      */
-    public function createRequest(array $config)
+    public function createRequest(array $config) : NovaPayRequest
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return Yii::createObject($config, [$this]);

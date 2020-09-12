@@ -55,7 +55,7 @@ class SessionRequest extends NovaPayRequest
     /**
      * @inheritDoc
      */
-    public function rules()
+    public function rules() : array
     {
         return [
             ['firstName', 'trim'],

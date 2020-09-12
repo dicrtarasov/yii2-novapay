@@ -25,7 +25,7 @@ class VoidRequest extends NovaPayRequest
     /**
      * @inheritDoc
      */
-    public function rules()
+    public function rules() : array
     {
         return [
             ['sessionId', 'trim'],
@@ -36,7 +36,7 @@ class VoidRequest extends NovaPayRequest
     /**
      * @inheritDoc
      */
-    protected function func(): string
+    protected function func() : string
     {
         return 'void';
     }
@@ -44,7 +44,7 @@ class VoidRequest extends NovaPayRequest
     /**
      * @inheritDoc
      */
-    protected function data(): array
+    protected function data() : array
     {
         return [
             'session_id' => $this->sessionId
@@ -56,7 +56,7 @@ class VoidRequest extends NovaPayRequest
      *
      * @throws Exception
      */
-    public function send(): void
+    public function send() : void
     {
         parent::send();
     }
