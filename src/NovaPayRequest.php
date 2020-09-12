@@ -135,20 +135,20 @@ abstract class NovaPayRequest extends JsonEntity
             'X-Sign' => $this->createSign($json)
         ]);
 
-        Yii::debug('Отправка запроса: ' . $request->toString(), __METHOD__);
-
         // отправляем запрос
+        Yii::debug('Отправка запроса: ' . $request->toString(), __METHOD__);
         $response = $request->send();
-
+        $response->format = Client::FORMAT_JSON;
         Yii::debug('Ответ: ' . $response->toString(), __METHOD__);
 
         if (! $response->isOk) {
-            throw new Exception('Ошибка: ' . $response->statusCode);
+            throw new Exception(
+                ! empty($response->data['errors']) ? Json::encode($response->data['errors']) :
+                    $response->toString()
+            );
         }
 
         // возвращаем ответ
-        $response->format = Client::FORMAT_JSON;
-
         return $response->data;
     }
 }

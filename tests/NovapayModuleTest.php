@@ -15,6 +15,8 @@ use dicr\novapay\NovaPayModule;
 use dicr\novapay\Product;
 use dicr\novapay\request\FramesInitRequest;
 use dicr\novapay\request\GetStatusRequest;
+use dicr\novapay\request\PaymentRequest;
+use dicr\novapay\request\SessionRequest;
 use PHPUnit\Framework\TestCase;
 use Yii;
 use yii\base\Exception;
@@ -40,7 +42,7 @@ class NovapayModuleTest extends TestCase
      * @throws Exception
      * @throws InvalidConfigException
      */
-    public function testCreateRequest()
+    public function testFramesInitRequest()
     {
         // запрос на создание платежа
         $request = self::module()->createRequest([
@@ -91,5 +93,35 @@ class NovapayModuleTest extends TestCase
         ]);
 
         echo 'status: ' . $status;
+    }
+
+    /**
+     * @throws Exception
+     * @throws InvalidConfigException
+     */
+    public function testSessionPaymentRequest()
+    {
+        /** @var SessionRequest $request запрос на создание платежной сессии */
+        $request = self::module()->createRequest([
+            'class' => SessionRequest::class,
+            'phone' => 380506441163
+        ]);
+
+        $sessionId = $request->send();
+        self::assertIsString($sessionId);
+        self::assertNotEmpty($sessionId);
+        echo 'sessionId: ' . $sessionId . "\n";
+
+        /** @var PaymentRequest $request запрос на создание платежа */
+        $request = self::module()->createRequest([
+            'class' => PaymentRequest::class,
+            'sessionId' => $sessionId,
+            'amount' => 112.23
+        ]);
+
+        $url = $request->send();
+        self::assertIsString($url);
+        self::assertStringStartsWith('https://', $url);
+        echo 'URL: ' . $url . "\n";
     }
 }

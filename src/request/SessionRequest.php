@@ -11,24 +11,26 @@ declare(strict_types = 1);
 namespace dicr\novapay\request;
 
 use dicr\novapay\NovaPayRequest;
+use dicr\validate\PhoneValidator;
 use yii\base\Exception;
 use yii\helpers\Json;
 
 use function array_merge;
 use function is_array;
+use function preg_replace;
 
 /**
  * Creates payment session.
  */
 class SessionRequest extends NovaPayRequest
 {
-    /** @var string */
+    /** @var ?string */
     public $firstName;
 
-    /** @var string */
+    /** @var ?string */
     public $lastName;
 
-    /** @var string отчество */
+    /** @var ?string отчество */
     public $patronymic;
 
     /** @var string phone in international format */
@@ -74,16 +76,20 @@ class SessionRequest extends NovaPayRequest
     {
         return [
             ['firstName', 'trim'],
-            ['firstName', 'required'],
+            ['firstName', 'default'],
 
             ['lastName', 'trim'],
-            ['lastName', 'required'],
+            ['lastName', 'default'],
 
             ['patronymic', 'trim'],
-            ['patronymic', 'required'],
+            ['patronymic', 'default'],
 
             ['phone', 'trim'],
             ['phone', 'required'],
+            ['phone', PhoneValidator::class, 'country' => 38, 'region' => 44, 'skipOnEmpty' => false],
+            ['phone', 'filter', 'filter' => function ($val) {
+                return '+' . (int)preg_replace('~[\D]+~', '', (string)$val);
+            }],
 
             ['email', 'trim'],
             ['email', 'default'],

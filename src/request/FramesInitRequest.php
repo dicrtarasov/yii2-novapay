@@ -66,7 +66,7 @@ class FramesInitRequest extends NovaPayRequest
     /** @var Product[]|null optional payment purpose description */
     public $products;
 
-    /** @var ?Delivery optional object holding data about delivered package */
+    /** @var Delivery optional object holding data about delivered package */
     public $delivery;
 
     /**
@@ -165,22 +165,18 @@ class FramesInitRequest extends NovaPayRequest
                 $this->products = $products;
             }],
 
-            ['delivery', 'default'],
+            ['delivery', 'required'],
             ['delivery', function ($attribute) {
-                if (empty($this->delivery)) {
-                    $this->delivery = null;
-                } else {
-                    if (is_array($this->delivery)) {
-                        $this->delivery = new Delivery($this->delivery);
-                    }
+                if (is_array($this->delivery)) {
+                    $this->delivery = new Delivery($this->delivery);
+                }
 
-                    if ($this->delivery instanceof Delivery) {
-                        if (! $this->delivery->validate()) {
-                            $this->addError($attribute, (new ValidateException($this->delivery))->getMessage());
-                        }
-                    } else {
-                        $this->addError($attribute, 'Некорректный тип информации о доставке');
+                if ($this->delivery instanceof Delivery) {
+                    if (! $this->delivery->validate()) {
+                        $this->addError($attribute, (new ValidateException($this->delivery))->getMessage());
                     }
+                } else {
+                    $this->addError($attribute, 'Некорректный тип информации о доставке');
                 }
             }]
         ];
