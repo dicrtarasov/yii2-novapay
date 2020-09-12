@@ -45,16 +45,6 @@ class GetStatusRequest extends NovaPayRequest implements NovaPay
     }
 
     /**
-     * @inheritDoc
-     */
-    protected function data() : array
-    {
-        return [
-            'session_id' => $this->sessionId
-        ];
-    }
-
-    /**
      * Отправляет запрос.
      *
      * @return string статус сессии.

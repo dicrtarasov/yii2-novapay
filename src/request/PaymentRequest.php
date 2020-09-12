@@ -13,10 +13,11 @@ namespace dicr\novapay\request;
 use dicr\novapay\Delivery;
 use dicr\novapay\NovaPayRequest;
 use dicr\novapay\Product;
+use dicr\validate\ValidateException;
 use yii\base\Exception;
 use yii\helpers\Json;
 
-use function array_map;
+use function is_array;
 
 /**
  * Add payment to created session and optionally initialize its processing.
@@ -32,7 +33,7 @@ class PaymentRequest extends NovaPayRequest
     /** @var float сумма платежа */
     public $amount;
 
-    /** @var ?array optional payment purpose description */
+    /** @var Product[]|null optional payment purpose description */
     public $products;
 
     /**
@@ -43,6 +44,17 @@ class PaymentRequest extends NovaPayRequest
 
     /** @var ?Delivery optional object holding data about delivered package */
     public $delivery;
+
+    /**
+     * @inheritDoc
+     */
+    public function attributeEntities() : array
+    {
+        return [
+            'products' => [Product::class],
+            'delivery' => Delivery::class
+        ];
+    }
 
     /**
      * @inheritDoc
@@ -61,15 +73,32 @@ class PaymentRequest extends NovaPayRequest
             ['amount', 'filter', 'filter' => 'floatval'],
 
             ['products', 'default'],
-            ['products', 'each' => function (
-                $attribute,
-                /* @noinspection PhpUnusedParameterInspection */ $params,
-                /* @noinspection PhpUnusedParameterInspection */ $validator,
-                $current
-            ) {
-                if (! $current instanceof Product) {
-                    $this->addError($attribute, 'Товар должен быть типом Product');
+            ['products', function (string $attribute) {
+                $products = null;
+
+                if (! empty($this->products)) {
+                    if (is_array($this->products)) {
+                        foreach ($this->products as $i => $prod) {
+                            if (is_array($prod)) {
+                                $prod = new Product($prod);
+                            }
+
+                            if ($prod instanceof Product) {
+                                if (! $prod->validate()) {
+                                    $this->addError($attribute, (new ValidateException($prod))->getMessage());
+                                }
+                            } else {
+                                $this->addError($attribute, 'Товар должен быть элементом Product');
+                            }
+
+                            $products[] = $prod;
+                        }
+                    } else {
+                        $this->addError($attribute, 'Товары должны быть массивом');
+                    }
                 }
+
+                $this->products = $products;
             }],
 
             ['useHold', 'default'],
@@ -78,8 +107,20 @@ class PaymentRequest extends NovaPayRequest
 
             ['delivery', 'default'],
             ['delivery', function ($attribute) {
-                if (! $this->delivery instanceof Delivery) {
-                    $this->addError($attribute, 'Некорректный тип информации о доставке');
+                if (empty($this->delivery)) {
+                    $this->delivery = null;
+                } else {
+                    if (is_array($this->delivery)) {
+                        $this->delivery = new Delivery($this->delivery);
+                    }
+
+                    if ($this->delivery instanceof Delivery) {
+                        if (! $this->delivery->validate()) {
+                            $this->addError($attribute, (new ValidateException($this->delivery))->getMessage());
+                        }
+                    } else {
+                        $this->addError($attribute, 'Некорректный тип информации о доставке');
+                    }
                 }
             }]
         ];
@@ -88,26 +129,9 @@ class PaymentRequest extends NovaPayRequest
     /**
      * @inheritDoc
      */
-    protected function func(): string
+    protected function func() : string
     {
         return 'payment';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function data(): array
-    {
-        return [
-            'session_id' => $this->sessionId,
-            'external_id' => $this->externalId,
-            'amount' => $this->amount,
-            'products' => array_map(static function (Product $prod) {
-                return $prod->data;
-            }, $this->products ?: []) ?: null,
-            'use_hold' => $this->useHold,
-            'delivery' => $this->delivery->data ?? null
-        ];
     }
 
     /**
@@ -116,7 +140,7 @@ class PaymentRequest extends NovaPayRequest
      * @return string URL для переадресации на оплату (if start_process parameter is true)
      * @throws Exception
      */
-    public function send(): string
+    public function send() : string
     {
         $data = parent::send();
 

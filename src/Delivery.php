@@ -9,68 +9,42 @@
 declare(strict_types = 1);
 namespace dicr\novapay;
 
-use yii\base\BaseObject;
+use dicr\helper\JsonEntity;
 
 /**
  * Информация о доставке.
- *
- * @property array $data данные JSON.
  */
-class Delivery extends BaseObject
+class Delivery extends JsonEntity
 {
-    /** @var float объем * вес (minimum 0.0004) */
+    /** @var float объем * вес (minimum 0.01) */
     public $volumeWeight;
 
     /** @var float вес (minimum 0.1) */
     public $weight;
 
-    /** @var string ID НоваПошта города получателя */
+    /** @var ?string ID НоваПошта города получателя */
     public $recipientCity;
 
-    /** @var string ID отделения НоваПошта */
+    /** @var ?string ID отделения НоваПошта */
     public $recipientWarehouse;
 
     /**
-     * Данные JSON.
-     *
-     * @return array
+     * @inheritDoc
      */
-    public function getData(): array
+    public function rules() : array
     {
-        return array_filter([
-            'volume_weight' => isset($this->volumeWeight) ? (float)$this->volumeWeight : null,
-            'weight' => isset($this->weight) ? (float)$this->weight : null,
-            'recipient_city' => isset($this->recipientCity) ? (string)$this->recipientCity : null,
-            'recipient_warehouse' => isset($this->recipientWarehouse) ? (string)$this->recipientWarehouse : null
-        ], static function ($val) {
-            return $val !== null && $val !== '' && $val !== [];
-        });
-    }
+        return [
+            ['volumeWeight', 'number', 'min' => 0.01],
+            ['volumeWeight', 'filter', 'filter' => 'floatval'],
 
-    /**
-     * Установить данные из JSON.
-     *
-     * @param array $data
-     * @return $this
-     */
-    public function setData(array $data): self
-    {
-        if (isset($data['volume_weight'])) {
-            $this->volumeWeight = (float)$data['volume_weight'];
-        }
+            ['weight', 'number', 'min' => 0.1],
+            ['weight', 'filter', 'filter' => 'floatval'],
 
-        if (isset($data['weight'])) {
-            $this->weight = (float)$data['weight'];
-        }
+            ['recipientCity', 'trim'],
+            ['recipientCity', 'default'],
 
-        if (isset($data['recipient_city'])) {
-            $this->recipientCity = (string)$data['recipient_city'];
-        }
-
-        if (isset($data['recipient_warehouse'])) {
-            $this->recipientWarehouse = (string)$data['recipient_warehouse'];
-        }
-
-        return $this;
+            ['recipientWarehouse', 'trim'],
+            ['recipientWarehouse', 'default']
+        ];
     }
 }

@@ -9,58 +9,40 @@
 declare(strict_types = 1);
 namespace dicr\novapay;
 
-use yii\base\BaseObject;
+use dicr\helper\JsonEntity;
 
 /**
  * Информация о товаре.
- *
- * @property array $data
  */
-class Product extends BaseObject
+class Product extends JsonEntity
 {
     /** @var string payment position title */
     public $description;
 
-    /** @var string payment position count */
+    /** @var int payment position count */
     public $count;
 
-    /** @var string payment position total price */
+    /** @var float payment position total price */
     public $price;
 
     /**
-     * Данные JSON.
-     *
-     * @return string[]
+     * @inheritDoc
      */
-    public function getData(): array
+    public function rules() : array
     {
         return [
-            'description' => $this->description,
-            'count' => $this->count,
-            'price' => $this->price
+            ['description', 'trim'],
+            ['description', 'required'],
+
+            ['price', 'trim'],
+            ['price', 'required'],
+            ['price', 'number', 'min' => 0.01],
+            ['price', 'filter', 'filter' => 'floatval'],
+
+            ['count', 'trim'],
+            ['count', 'required'],
+            ['count', 'integer', 'min' => 1],
+            ['count', 'filter', 'filter' => 'intval']
         ];
-    }
-
-    /**
-     * Установить данные JSON.
-     *
-     * @param array $data
-     * @return $this
-     */
-    public function setData(array $data): self
-    {
-        if (isset($data['description'])) {
-            $this->description = (string)$data['description'];
-        }
-
-        if (isset($data['count'])) {
-            $this->count = (string)$data['count'];
-        }
-
-        if (isset($data['price'])) {
-            $this->price = (string)$data['price'];
-        }
-
-        return $this;
     }
 }

@@ -13,10 +13,10 @@ namespace dicr\novapay\request;
 use dicr\novapay\Delivery;
 use dicr\novapay\NovaPayRequest;
 use dicr\novapay\Product;
+use dicr\validate\ValidateException;
 use yii\base\Exception;
 use yii\helpers\Json;
 
-use function array_map;
 use function is_array;
 
 /**
@@ -63,11 +63,36 @@ class FramesInitRequest extends NovaPayRequest
     /** @var float сумма платежа */
     public $amount;
 
-    /** @var ?array optional payment purpose description */
+    /** @var Product[]|null optional payment purpose description */
     public $products;
 
     /** @var ?Delivery optional object holding data about delivered package */
     public $delivery;
+
+    /**
+     * @inheritDoc
+     */
+    public function attributeFields() : array
+    {
+        return array_merge(parent::attributeFields(), [
+            'firstName' => 'client_first_name',
+            'lastName' => 'client_last_name',
+            'patronymic' => 'client_patronymic',
+            'phone' => 'client_phone',
+            'email' => 'client_email',
+        ]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function attributeEntities() : array
+    {
+        return [
+            'products' => [Product::class],
+            'delivery' => Delivery::class
+        ];
+    }
 
     /**
      * @inheritDoc
@@ -93,7 +118,9 @@ class FramesInitRequest extends NovaPayRequest
 
             ['metadata', 'default'],
             ['metadata', function (string $attribute) {
-                if (! is_array($this->metadata)) {
+                if (empty($this->metadata)) {
+                    $this->metadata = null;
+                } elseif (! is_array($this->metadata)) {
                     $this->addError($attribute, 'Метаданные должны быть массивом');
                 }
             }],
@@ -111,21 +138,49 @@ class FramesInitRequest extends NovaPayRequest
 
             ['products', 'default'],
             ['products', function (string $attribute) {
-                if (is_array($this->products)) {
-                    foreach ($this->products as $prod) {
-                        if (! $prod instanceof Product) {
-                            $this->addError($attribute, 'Товар должен быть элементом Product');
+                $products = null;
+
+                if (! empty($this->products)) {
+                    if (is_array($this->products)) {
+                        foreach ($this->products as $i => $prod) {
+                            if (is_array($prod)) {
+                                $prod = new Product($prod);
+                            }
+
+                            if ($prod instanceof Product) {
+                                if (! $prod->validate()) {
+                                    $this->addError($attribute, (new ValidateException($prod))->getMessage());
+                                }
+                            } else {
+                                $this->addError($attribute, 'Товар должен быть элементом Product');
+                            }
+
+                            $products[] = $prod;
                         }
+                    } else {
+                        $this->addError($attribute, 'Товары должны быть массивом');
                     }
-                } else {
-                    $this->addError($attribute, 'Товары должны быть массивом');
                 }
+
+                $this->products = $products;
             }],
 
             ['delivery', 'default'],
             ['delivery', function ($attribute) {
-                if (! $this->delivery instanceof Delivery) {
-                    $this->addError($attribute, 'Некорректный тип информации о доставке');
+                if (empty($this->delivery)) {
+                    $this->delivery = null;
+                } else {
+                    if (is_array($this->delivery)) {
+                        $this->delivery = new Delivery($this->delivery);
+                    }
+
+                    if ($this->delivery instanceof Delivery) {
+                        if (! $this->delivery->validate()) {
+                            $this->addError($attribute, (new ValidateException($this->delivery))->getMessage());
+                        }
+                    } else {
+                        $this->addError($attribute, 'Некорректный тип информации о доставке');
+                    }
                 }
             }]
         ];
@@ -134,33 +189,9 @@ class FramesInitRequest extends NovaPayRequest
     /**
      * @inheritDoc
      */
-    protected function func(): string
+    protected function func() : string
     {
         return 'frames/init';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function data(): array
-    {
-        return [
-            'client_first_name' => $this->firstName,
-            'client_last_name' => $this->lastName,
-            'client_patronymic' => $this->patronymic,
-            'client_phone' => $this->phone,
-            'client_email' => $this->email,
-            'metadata' => $this->metadata,
-            'callback_url' => $this->callbackUrl,
-            'success_url' => $this->successUrl,
-            'fail_url' => $this->failUrl,
-            'external_id' => $this->externalId,
-            'amount' => $this->amount,
-            'products' => array_map(static function (Product $prod) {
-                return $prod->data;
-            }, $this->products ?: []) ?: null,
-            'delivery' => $this->delivery->data ?? null
-        ];
     }
 
     /**
@@ -169,7 +200,7 @@ class FramesInitRequest extends NovaPayRequest
      * @return string[] id платежной сессии и url для переадресации на оплату.
      * @throws Exception
      */
-    public function send(): array
+    public function send() : array
     {
         $data = parent::send();
 

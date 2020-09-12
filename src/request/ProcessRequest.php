@@ -42,16 +42,6 @@ class ProcessRequest extends NovaPayRequest
     }
 
     /**
-     * @inheritDoc
-     */
-    protected function data(): array
-    {
-        return [
-            'session_id' => $this->sessionId
-        ];
-    }
-
-    /**
      * Отправляет запрос.
      *
      * @throws Exception

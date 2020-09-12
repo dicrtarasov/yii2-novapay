@@ -9,10 +9,10 @@
 declare(strict_types = 1);
 namespace dicr\novapay;
 
+use dicr\helper\JsonEntity;
 use dicr\validate\ValidateException;
 use Yii;
 use yii\base\Exception;
-use yii\base\Model;
 use yii\helpers\Json;
 use yii\helpers\StringHelper;
 use yii\helpers\Url;
@@ -28,7 +28,7 @@ use function openssl_sign;
 /**
  * Абстрактный запрос Novapay.
  */
-abstract class NovaPayRequest extends Model
+abstract class NovaPayRequest extends JsonEntity
 {
     /** @var NovaPayModule */
     private $_module;
@@ -52,16 +52,6 @@ abstract class NovaPayRequest extends Model
      * @return string
      */
     abstract protected function func() : string;
-
-    /**
-     * Данные для JSON.
-     *
-     * @return array
-     */
-    protected function data() : array
-    {
-        return $this->attributes;
-    }
 
     /**
      * Возвращает ошибки SSL.
@@ -121,7 +111,7 @@ abstract class NovaPayRequest extends Model
         }
 
         // фильтруем данные
-        $data = array_filter($this->data(), static function ($val) {
+        $data = array_filter($this->json, static function ($val) {
             return $val !== null && $val !== '' && $val !== [];
         });
 
@@ -145,12 +135,15 @@ abstract class NovaPayRequest extends Model
             'X-Sign' => $this->createSign($json)
         ]);
 
-        Yii::debug('Отправка запроса: ' . $request->toString());
+        Yii::debug('Отправка запроса: ' . $request->toString(), __METHOD__);
 
         // отправляем запрос
         $response = $request->send();
+
+        Yii::debug('Ответ: ' . $response->toString(), __METHOD__);
+
         if (! $response->isOk) {
-            throw new Exception('Ошибка: ' . $response->content);
+            throw new Exception('Ошибка: ' . $response->statusCode);
         }
 
         // возвращаем ответ

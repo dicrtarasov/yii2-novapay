@@ -60,7 +60,7 @@ class NovapayModuleTest extends TestCase
             ],
             'delivery' => new Delivery([
                 'volumeWeight' => 0.01,
-                'weight' => 0.2
+                'weight' => 0.1
             ])
         ]);
 

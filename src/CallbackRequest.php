@@ -9,14 +9,14 @@
 declare(strict_types = 1);
 namespace dicr\novapay;
 
-use yii\base\BaseObject;
+use dicr\helper\JsonEntity;
+
+use function array_merge;
 
 /**
  * Запрос от сервера NovaPay с уведомлением о статусе платежа.
- *
- * @property-write array $data
  */
-class CallbackRequest extends BaseObject
+class CallbackRequest extends JsonEntity
 {
     /** @var string платежная сессия */
     public $sessionId;
@@ -62,64 +62,27 @@ class CallbackRequest extends BaseObject
     public $deliveryStatusText;
 
     /**
-     * Установить данные JSON.
-     *
-     * @param array $data
-     * @return $this
+     * @inheritDoc
      */
-    public function setData(array $data): self
+    public function attributeFields() : array
     {
-        $this->sessionId = (string)$data['id'];
-        $this->status = (string)$data['status'];
+        return array_merge(parent::attributeFields(), [
+            'sessionId' => 'id',
+            'firstName' => 'client_first_name',
+            'lastName' => 'client_last_name',
+            'patronymic' => 'client_patronymic',
+            'phone' => 'client_phone'
+        ]);
+    }
 
-        if (isset($data['metadata'])) {
-            $this->metadata = (array)$data['metadata'];
-        }
-
-        if (isset($data['client_first_name'])) {
-            $this->firstName = (string)$data['client_first_name'];
-        }
-
-        if (isset($data['client_last_name'])) {
-            $this->lastName = (string)$data['client_last_name'];
-        }
-
-        if (isset($data['client_patronymic'])) {
-            $this->patronymic = (string)$data['client_patronymic'];
-        }
-
-        if (isset($data['client_phone'])) {
-            $this->phone = (string)$data['client_phone'];
-        }
-
-        if (isset($data['external_id'])) {
-            $this->externalId = (string)$data['external_id'];
-        }
-
-        if (isset($data['delivery'])) {
-            $this->delivery = new Delivery([
-                'data' => $data['delivery']
-            ]);
-        }
-
-        if (isset($data['products'])) {
-            $this->products = array_map(static function (array $data) {
-                return new Product(['data' => $data]);
-            }, $data['products']);
-        }
-
-        if (isset($data['delivery_amount'])) {
-            $this->deliveryAmount = (float)$data['delivery_amount'];
-        }
-
-        if (isset($data['delivery_status_code'])) {
-            $this->deliveryStatusCode = (int)$data['delivery_status_code'];
-        }
-
-        if (isset($data['delivery_status_text'])) {
-            $this->deliveryStatusText = (string)$data['delivery_status_text'];
-        }
-
-        return $this;
+    /**
+     * @inheritDoc
+     */
+    public function attributeEntities() : array
+    {
+        return [
+            'products' => [Product::class],
+            'delivery' => Delivery::class
+        ];
     }
 }

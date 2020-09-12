@@ -14,6 +14,7 @@ use dicr\novapay\NovaPayRequest;
 use yii\base\Exception;
 use yii\helpers\Json;
 
+use function array_merge;
 use function is_array;
 
 /**
@@ -55,6 +56,20 @@ class SessionRequest extends NovaPayRequest
     /**
      * @inheritDoc
      */
+    public function attributeFields() : array
+    {
+        return array_merge(parent::attributeFields(), [
+            'firstName' => 'client_first_name',
+            'lastName' => 'client_last_name',
+            'patronymic' => 'client_patronymic',
+            'phone' => 'client_phone',
+            'email' => 'client_email',
+        ]);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function rules() : array
     {
         return [
@@ -90,27 +105,9 @@ class SessionRequest extends NovaPayRequest
     /**
      * @inheritDoc
      */
-    protected function func(): string
+    protected function func() : string
     {
         return 'session';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function data(): array
-    {
-        return [
-            'client_first_name' => $this->firstName,
-            'client_last_name' => $this->lastName,
-            'client_patronymic' => $this->patronymic,
-            'client_phone' => $this->phone,
-            'client_email' => $this->email,
-            'metadata' => $this->metadata,
-            'callback_url' => $this->callbackUrl,
-            'success_url' => $this->successUrl,
-            'fail_url' => $this->failUrl
-        ];
     }
 
     /**
@@ -119,7 +116,7 @@ class SessionRequest extends NovaPayRequest
      * @return string ID сессии
      * @throws Exception
      */
-    public function send(): string
+    public function send() : string
     {
         $data = parent::send();
 

@@ -44,16 +44,6 @@ class ConfirmDeliveryHoldRequest extends NovaPayRequest
     }
 
     /**
-     * @inheritDoc
-     */
-    protected function data(): array
-    {
-        return [
-            'session_id' => $this->sessionId
-        ];
-    }
-
-    /**
      * Отправляет запрос.
      *
      * @return string номер экспресс-накладной.
