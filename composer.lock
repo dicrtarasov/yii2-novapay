@@ -143,16 +143,16 @@
         },
         {
             "name": "dicr/yii2-helper",
-            "version": "3.7.3",
+            "version": "3.7.4",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/dicr/yii2-helper.git",
-                "reference": "db945ce1ecb3b6792c55fee66ebd064b7c542db8"
+                "reference": "4f35d90beb3d0176632e3f7e0dc4562839af0538"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/dicr%2Fyii2-helper/repository/archive.zip?sha=db945ce1ecb3b6792c55fee66ebd064b7c542db8",
-                "reference": "db945ce1ecb3b6792c55fee66ebd064b7c542db8",
+                "url": "https://gitlab.com/api/v4/projects/dicr%2Fyii2-helper/repository/archive.zip?sha=4f35d90beb3d0176632e3f7e0dc4562839af0538",
+                "reference": "4f35d90beb3d0176632e3f7e0dc4562839af0538",
                 "shasum": ""
             },
             "require": {
@@ -202,7 +202,7 @@
                 "source": "https://gitlab.com/dicr/yii2-helper.git",
                 "issues": "https://gitlab.com/api/v4/projects/9713190/issues"
             },
-            "time": "2020-09-08T22:23:50+05:00"
+            "time": "2020-09-12T22:02:46+05:00"
         },
         {
             "name": "dicr/yii2-validate",
