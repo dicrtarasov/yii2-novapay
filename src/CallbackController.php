@@ -42,13 +42,13 @@ class CallbackController extends Controller
             throw new BadRequestHttpException();
         }
 
+        Yii::debug('Callback-запрос: ' . Yii::$app->request->rawBody, __METHOD__);
+
         // проверяем подпись
         $this->verifySign(
             Yii::$app->request->rawBody,
             Yii::$app->request->headers->get('x-sign')
         );
-
-        Yii::debug('NovaPay callback: ' . Yii::$app->request->rawBody, __METHOD__);
 
         if (! empty($this->module->callback)) {
             $request = new CallbackRequest([
@@ -68,7 +68,7 @@ class CallbackController extends Controller
      * @throws BadRequestHttpException
      * @throws ServerErrorHttpException
      */
-    private function verifySign(string $data, string $sign): bool
+    private function verifySign(string $data, string $sign) : bool
     {
         $key = openssl_pkey_get_public($this->module->serverKey);
         if ($key === false) {
