@@ -11,7 +11,7 @@
             "version": "3.3.11",
             "source": {
                 "type": "git",
-                "url": "git@github.com:RobinHerbots/Inputmask.git",
+                "url": "https://github.com/RobinHerbots/Inputmask.git",
                 "reference": "5e670ad62f50c738388d4dcec78d2888505ad77b"
             },
             "dist": {
@@ -32,7 +32,7 @@
             "version": "3.5.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jquery/jquery-dist.git",
+                "url": "git@github.com:jquery/jquery-dist.git",
                 "reference": "4c0e4becb8263bb5b3e6dadc448d8e7305ef8215"
             },
             "dist": {
@@ -143,16 +143,16 @@
         },
         {
             "name": "dicr/yii2-helper",
-            "version": "3.7.4",
+            "version": "3.7.6",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/dicr/yii2-helper.git",
-                "reference": "4f35d90beb3d0176632e3f7e0dc4562839af0538"
+                "reference": "aea61df9f22e0b8c9cf1c41a4e2d4d783b761701"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/dicr%2Fyii2-helper/repository/archive.zip?sha=4f35d90beb3d0176632e3f7e0dc4562839af0538",
-                "reference": "4f35d90beb3d0176632e3f7e0dc4562839af0538",
+                "url": "https://gitlab.com/api/v4/projects/dicr%2Fyii2-helper/repository/archive.zip?sha=aea61df9f22e0b8c9cf1c41a4e2d4d783b761701",
+                "reference": "aea61df9f22e0b8c9cf1c41a4e2d4d783b761701",
                 "shasum": ""
             },
             "require": {
@@ -202,7 +202,7 @@
                 "source": "https://gitlab.com/dicr/yii2-helper.git",
                 "issues": "https://gitlab.com/api/v4/projects/9713190/issues"
             },
-            "time": "2020-09-12T22:02:46+05:00"
+            "time": "2020-09-14T21:24:57+05:00"
         },
         {
             "name": "dicr/yii2-validate",
@@ -324,16 +324,16 @@
         },
         {
             "name": "yiisoft/yii2",
-            "version": "2.0.37",
+            "version": "2.0.38",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-framework.git",
-                "reference": "e8094d1aa9e807fbea970bc1360ab836ffb1b738"
+                "reference": "fd01e747cc66a049ec105048f0ab8dfbdf60bf4b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/e8094d1aa9e807fbea970bc1360ab836ffb1b738",
-                "reference": "e8094d1aa9e807fbea970bc1360ab836ffb1b738",
+                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/fd01e747cc66a049ec105048f0ab8dfbdf60bf4b",
+                "reference": "fd01e747cc66a049ec105048f0ab8dfbdf60bf4b",
                 "shasum": ""
             },
             "require": {
@@ -434,7 +434,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-08-07T20:11:56+00:00"
+            "time": "2020-09-14T21:52:10+00:00"
         },
         {
             "name": "yiisoft/yii2-bootstrap4",
@@ -1517,12 +1517,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "425be18066a07ae07112a0aec85bf16f9cd02ed1"
+                "reference": "5ae6aa6482b72946bc0d279c3b54dc1dbeae68d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/425be18066a07ae07112a0aec85bf16f9cd02ed1",
-                "reference": "425be18066a07ae07112a0aec85bf16f9cd02ed1",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/5ae6aa6482b72946bc0d279c3b54dc1dbeae68d8",
+                "reference": "5ae6aa6482b72946bc0d279c3b54dc1dbeae68d8",
                 "shasum": ""
             },
             "conflict": {
@@ -1809,7 +1809,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-09-11T17:02:36+00:00"
+            "time": "2020-09-13T17:11:14+00:00"
         },
         {
             "name": "sebastian/cli-parser",
