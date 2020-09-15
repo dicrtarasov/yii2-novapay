@@ -61,9 +61,6 @@ class CallbackRequest extends JsonEntity
     /** @var ?string статус доставки в текстовом виде */
     public $deliveryStatusText;
 
-    /** @var array неизвестно что приходит от novapay */
-    public $data;
-
     /**
      * @inheritDoc
      */
