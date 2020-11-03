@@ -1,11 +1,11 @@
 <?php
-
 /*
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 23.08.20 02:46:44
+ * @version 03.11.20 20:37:57
  */
+
 declare(strict_types = 1);
 
 /** среда разработки */
@@ -20,11 +20,18 @@ require_once(dirname(__DIR__) . '/vendor/yiisoft/yii2/Yii.php');
 /** @noinspection PhpUnhandledExceptionInspection */
 new yii\console\Application([
     'id' => 'test',
-    'basePath' => __DIR__,
+    'basePath' => dirname(__DIR__),
     'components' => [
-        'cache' => yii\caching\ArrayCache::class,
+        'cache' => [
+            'class' => yii\caching\FileCache::class
+        ],
+        'log' => [
+            'targets' => [
+                ['class' => yii\log\FileTarget::class]
+            ]
+        ],
         'urlManager' => [
-            'hostInfo' => 'https://localhost'
+            'hostInfo' => 'https://dicr.org'
         ]
     ],
     'modules' => [
@@ -35,5 +42,6 @@ new yii\console\Application([
             'serverKey' => dicr\novapay\NovaPay::TEST_SERVER_PUB,
             'clientKey' => dicr\novapay\NovaPay::TEST_CLIENT_KEY
         ]
-    ]
+    ],
+    'bootstrap' => ['log']
 ]);

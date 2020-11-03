@@ -3,13 +3,13 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 23.08.20 02:46:44
+ * @version 03.11.20 20:37:19
  */
 
 declare(strict_types = 1);
 namespace dicr\novapay;
 
-use dicr\helper\JsonEntity;
+use dicr\json\JsonEntity;
 
 /**
  * Информация о товаре.
@@ -24,6 +24,14 @@ class Product extends JsonEntity
 
     /** @var float payment position total price */
     public $price;
+
+    /**
+     * @inheritDoc
+     */
+    public function attributeFields() : array
+    {
+        return [];
+    }
 
     /**
      * @inheritDoc

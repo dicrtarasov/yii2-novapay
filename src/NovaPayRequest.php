@@ -3,13 +3,13 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 23.08.20 14:50:25
+ * @version 03.11.20 20:36:39
  */
 
 declare(strict_types = 1);
 namespace dicr\novapay;
 
-use dicr\helper\JsonEntity;
+use dicr\json\JsonEntity;
 use dicr\validate\ValidateException;
 use Yii;
 use yii\base\Exception;
@@ -31,7 +31,7 @@ use function openssl_sign;
 abstract class NovaPayRequest extends JsonEntity
 {
     /** @var NovaPayModule */
-    private $_module;
+    private $module;
 
     /**
      * NovapayRequest constructor.
@@ -41,7 +41,7 @@ abstract class NovaPayRequest extends JsonEntity
      */
     public function __construct(NovaPayModule $module, array $config = [])
     {
-        $this->_module = $module;
+        $this->module = $module;
 
         parent::__construct($config);
     }
@@ -78,7 +78,7 @@ abstract class NovaPayRequest extends JsonEntity
      */
     private function createSign(string $json) : string
     {
-        $pk = openssl_pkey_get_private($this->_module->clientKey);
+        $pk = openssl_pkey_get_private($this->module->clientKey);
         if ($pk === false) {
             throw new Exception('Некорректный приватный ключ клиента');
         }
@@ -111,36 +111,29 @@ abstract class NovaPayRequest extends JsonEntity
         }
 
         // фильтруем данные
-        $data = array_filter($this->json, static function ($val) {
+        $data = array_filter(array_merge([
+            'merchant_id' => $this->module->merchantId,
+            'callback_url' => Url::to('/' . $this->module->uniqueId . '/callback', true)
+        ], $this->getJson()), static function ($val) : bool {
             return $val !== null && $val !== '' && $val !== [];
         });
-
-        // добавляем merchant_id из модуля
-        if (! isset($data['merchant_id'])) {
-            $data['merchant_id'] = $this->_module->merchantId;
-        }
-
-        // добавляем callback_url модуля (только для режима web-приложения)
-        if (! isset($data['callback_url'])) {
-            $data['callback_url'] = Url::to('/' . $this->_module->uniqueId . '/callback', true);
-        }
 
         // кодируем данные в JSON
         $json = Json::encode($data);
 
         // HTTP-запрос
-        $request = $this->_module->httpClient->post($this->func(), $json, [
+        $request = $this->module->httpClient->post($this->func(), $json, [
             'Content-Type' => 'application/json',
             'Content-Length' => StringHelper::byteLength($json),
             'X-Sign' => $this->createSign($json)
         ]);
 
         // отправляем запрос
-        Yii::debug('Отправка запроса: ' . $request->toString(), __METHOD__);
+        Yii::debug('Запрос: ' . $request->toString(), __METHOD__);
         $response = $request->send();
-        $response->format = Client::FORMAT_JSON;
         Yii::debug('Ответ: ' . $response->toString(), __METHOD__);
 
+        $response->format = Client::FORMAT_JSON;
         if (! $response->isOk) {
             throw new Exception(
                 ! empty($response->data['errors']) ? Json::encode($response->data['errors']) :

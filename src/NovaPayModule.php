@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 23.08.20 02:46:44
+ * @version 03.11.20 20:14:48
  */
 
 declare(strict_types = 1);
@@ -19,7 +19,6 @@ use yii\httpclient\Client;
 use yii\web\Application;
 use yii\web\JsonParser;
 
-use function array_merge;
 use function is_callable;
 use function ob_end_clean;
 use function ob_get_level;
@@ -45,9 +44,6 @@ class NovaPayModule extends Module implements NovaPay
 
     /** @var ?callable function(CallbackRequest $request, NovaPayModule $module) обработчик callback */
     public $callback;
-
-    /** @var array конфиг HTTP-клиента */
-    public $httpClientConfig = [];
 
     /** @inheritDoc */
     public $controllerNamespace = __NAMESPACE__;
@@ -94,15 +90,12 @@ class NovaPayModule extends Module implements NovaPay
      * HTTP-клиент.
      *
      * @return Client
-     * @throws InvalidConfigException
      */
-    public function getHttpClient(): Client
+    public function getHttpClient() : Client
     {
-        if (! isset($this->_httpClient)) {
-            $this->_httpClient = Yii::createObject(array_merge([
-                'class' => Client::class,
-                'baseUrl' => $this->url,
-            ], $this->httpClientConfig ?: []));
+        if ($this->_httpClient === null) {
+            $this->_httpClient = new Client();
+            $this->_httpClient->baseUrl = $this->url;
         }
 
         return $this->_httpClient;

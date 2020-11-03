@@ -3,13 +3,13 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 23.08.20 02:46:44
+ * @version 03.11.20 19:57:27
  */
 
 declare(strict_types = 1);
 namespace dicr\novapay;
 
-use dicr\helper\JsonEntity;
+use dicr\json\JsonEntity;
 
 /**
  * Информация о доставке.

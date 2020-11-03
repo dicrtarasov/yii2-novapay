@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 23.08.20 02:46:44
+ * @version 03.11.20 20:05:31
  */
 
 declare(strict_types = 1);
@@ -20,7 +20,6 @@ use dicr\novapay\request\SessionRequest;
 use PHPUnit\Framework\TestCase;
 use Yii;
 use yii\base\Exception;
-use yii\base\InvalidConfigException;
 
 /**
  * Class NovapayModuleTest
@@ -32,7 +31,7 @@ class NovapayModuleTest extends TestCase
      *
      * @return NovaPayModule
      */
-    private static function module(): NovaPayModule
+    private static function module() : NovaPayModule
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return Yii::$app->getModule('novapay');
@@ -40,9 +39,8 @@ class NovapayModuleTest extends TestCase
 
     /**
      * @throws Exception
-     * @throws InvalidConfigException
      */
-    public function testFramesInitRequest()
+    public function testFramesInitRequest() : void
     {
         // запрос на создание платежа
         $request = self::module()->createRequest([
@@ -97,9 +95,8 @@ class NovapayModuleTest extends TestCase
 
     /**
      * @throws Exception
-     * @throws InvalidConfigException
      */
-    public function testSessionPaymentRequest()
+    public function testSessionPaymentRequest() : void
     {
         /** @var SessionRequest $request запрос на создание платежной сессии */
         $request = self::module()->createRequest([
