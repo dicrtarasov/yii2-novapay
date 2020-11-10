@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 03.11.20 20:37:26
+ * @version 10.11.20 03:53:28
  */
 
 declare(strict_types = 1);
@@ -86,7 +86,8 @@ class SessionRequest extends NovaPayRequest
 
             ['phone', 'trim'],
             ['phone', 'required'],
-            ['phone', PhoneValidator::class, 'country' => 38, 'region' => 44, 'skipOnEmpty' => false],
+            ['phone', PhoneValidator::class, 'country' => 38, 'region' => 44, 'formatOnValidate' => true,
+                'skipOnEmpty' => false],
             ['phone', 'filter', 'filter' => function ($val) : string {
                 return '+' . (int)preg_replace('~[\D]+~', '', (string)$val);
             }],

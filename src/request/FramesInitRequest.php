@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 10.11.20 03:42:12
+ * @version 10.11.20 03:53:44
  */
 
 declare(strict_types = 1);
@@ -112,7 +112,8 @@ class FramesInitRequest extends NovaPayRequest
 
             ['phone', 'trim'],
             ['phone', 'default'],
-            ['phone', PhoneValidator::class, 'country' => 38, 'region' => 44, 'skipOnEmpty' => true],
+            ['phone', PhoneValidator::class, 'country' => 38, 'region' => 44, 'formatOnValidate' => true,
+                'skipOnEmpty' => true],
             ['phone', 'filter', 'filter' => function ($val) : string {
                 return '+' . (int)preg_replace('~[\D]+~', '', (string)$val);
             }, 'skipOnEmpty' => true],
