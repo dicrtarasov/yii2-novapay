@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 03.11.20 20:05:31
+ * @version 10.11.20 03:43:00
  */
 
 declare(strict_types = 1);
@@ -14,6 +14,7 @@ use dicr\novapay\NovaPay;
 use dicr\novapay\NovaPayModule;
 use dicr\novapay\Product;
 use dicr\novapay\request\FramesInitRequest;
+use dicr\novapay\request\FramesInitResponse;
 use dicr\novapay\request\GetStatusRequest;
 use dicr\novapay\request\PaymentRequest;
 use dicr\novapay\request\SessionRequest;
@@ -64,24 +65,19 @@ class NovapayModuleTest extends TestCase
             ])
         ]);
 
+        /** @var FramesInitResponse $ret */
         $ret = $request->send();
 
-        self::assertIsArray($ret);
-        self::assertArrayHasKey('sessionId', $ret);
-        self::assertNotEmpty($ret['sessionId']);
-        self::assertArrayHasKey('url', $ret);
-        self::assertNotEmpty($ret['url']);
+        self::assertNotEmpty($ret->sessionId);
+        self::assertNotEmpty($ret->url);
 
-        $sessionId = $ret['sessionId'];
-        $url = $ret['url'];
-
-        echo 'sessionId: ' . $sessionId . "\n";
-        echo 'url: ' . $url . "\n";
+        echo 'SessionId: ' . $ret->sessionId . "\n";
+        echo 'URL: ' . $ret->url . "\n";
 
         // запрос на проверку состояние платежной сессии
         $request = self::module()->createRequest([
             'class' => GetStatusRequest::class,
-            'sessionId' => $ret['sessionId']
+            'sessionId' => $ret->sessionId
         ]);
 
         $status = $request->send();

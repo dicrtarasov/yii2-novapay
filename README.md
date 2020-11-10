@@ -20,7 +20,7 @@ API: see `doc`
 ```php
 use dicr\novapay\NovaPayModule;
 use dicr\novapay\request\FramesInitRequest;
-use dicr\novapay\request\GetStatusRequest;
+use dicr\novapay\request\FramesInitResponse;use dicr\novapay\request\GetStatusRequest;
 
 /** @var NovaPayModule $novaPay получаем модуль */
 $novaPay = Yii::$app->getModule('novapay');
@@ -47,15 +47,15 @@ $request = $novaPay->createRequest([
     ]
 ]);
 
-// отправляем запрос
+/** @var FramesInitResponse $ret отправляем запрос */
 $ret = $request->send();
 
-echo 'Адрес для переадресации: ' . $ret['url'] . "\n";
+echo 'Адрес для переадресации: ' . $ret->url . "\n";
 
 // запрос на проверку состояние платежной сессии
 $request = $novaPay->createRequest([
     'class' => GetStatusRequest::class,
-    'sessionId' => $ret['sessionId']
+    'sessionId' => $ret->sessionId
 ]);
 
 $status = $request->send();

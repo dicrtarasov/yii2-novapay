@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 10.11.20 03:22:33
+ * @version 10.11.20 03:42:12
  */
 
 declare(strict_types = 1);
@@ -16,7 +16,6 @@ use dicr\novapay\NovaPayRequest;
 use dicr\novapay\Product;
 use dicr\validate\PhoneValidator;
 use yii\base\Exception;
-use yii\helpers\Json;
 
 use function is_array;
 use function preg_replace;
@@ -161,26 +160,13 @@ class FramesInitRequest extends NovaPayRequest
     /**
      * Отправляет запрос.
      *
-     * @return string[] id платежной сессии и url для переадресации на оплату.
+     * @return FramesInitResponse
      * @throws Exception
      */
-    public function send() : array
+    public function send() : FramesInitResponse
     {
-        $data = parent::send();
-
-        $sessionId = (string)($data['session_id'] ?? '');
-        if ($sessionId === '') {
-            throw new Exception('Не получен ID сессии: ' . Json::encode($data));
-        }
-
-        $url = (string)($data['url'] ?? '');
-        if ($url === '') {
-            throw new Exception('Не получен URL для оплаты: ' . Json::encode($data));
-        }
-
-        return [
-            'sessionId' => $sessionId,
-            'url' => $url
-        ];
+        return new FramesInitResponse([
+            'json' => parent::send()
+        ]);
     }
 }

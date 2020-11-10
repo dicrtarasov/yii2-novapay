@@ -3,7 +3,7 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 03.11.20 20:41:54
+ * @version 10.11.20 03:26:30
  */
 
 declare(strict_types = 1);
@@ -52,7 +52,7 @@ class CallbackController extends Controller
 
         if (! empty($this->module->callback)) {
             $request = new CallbackRequest([
-                'data' => Yii::$app->request->bodyParams
+                'json' => Yii::$app->request->bodyParams
             ]);
 
             call_user_func($this->module->callback, $request, $this->module);
