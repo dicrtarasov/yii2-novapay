@@ -4,14 +4,14 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "486524b72769bb098b5a0148d9407843",
+    "content-hash": "6ae26ebf25bde4059ed3332cd4ca7c21",
     "packages": [
         {
             "name": "bower-asset/inputmask",
             "version": "3.3.11",
             "source": {
                 "type": "git",
-                "url": "git@github.com:RobinHerbots/Inputmask.git",
+                "url": "https://github.com/RobinHerbots/Inputmask.git",
                 "reference": "5e670ad62f50c738388d4dcec78d2888505ad77b"
             },
             "dist": {
@@ -32,7 +32,7 @@
             "version": "3.5.1",
             "source": {
                 "type": "git",
-                "url": "git@github.com:jquery/jquery-dist.git",
+                "url": "https://github.com/jquery/jquery-dist.git",
                 "reference": "4c0e4becb8263bb5b3e6dadc448d8e7305ef8215"
             },
             "dist": {
@@ -206,16 +206,16 @@
         },
         {
             "name": "dicr/yii2-json",
-            "version": "2.0.0",
+            "version": "2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/dicr/yii2-json.git",
-                "reference": "be9e95cbbdb3d2a5e7b60367555c6e9ce03fee86"
+                "reference": "ea57b9943304ba6944ff8a82aa33dc7cf8610f22"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/dicr%2Fyii2-json/repository/archive.zip?sha=be9e95cbbdb3d2a5e7b60367555c6e9ce03fee86",
-                "reference": "be9e95cbbdb3d2a5e7b60367555c6e9ce03fee86",
+                "url": "https://gitlab.com/api/v4/projects/dicr%2Fyii2-json/repository/archive.zip?sha=ea57b9943304ba6944ff8a82aa33dc7cf8610f22",
+                "reference": "ea57b9943304ba6944ff8a82aa33dc7cf8610f22",
                 "shasum": ""
             },
             "require": {
@@ -233,11 +233,7 @@
                     "dicr\\json\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "dicr\\tests\\": "tests/"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -257,11 +253,7 @@
                 "json",
                 "yii2"
             ],
-            "support": {
-                "source": "https://gitlab.com/dicr/yii2-json.git",
-                "issues": "https://gitlab.com/api/v4/projects/22090060/issues"
-            },
-            "time": "2020-11-03T20:34:45+03:00"
+            "time": "2020-11-03T22:58:01+00:00"
         },
         {
             "name": "dicr/yii2-validate",
@@ -1576,12 +1568,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "065a018d3b5c2c84a53db3347cca4e1b7fa362a6"
+                "reference": "e440567339d5fe93d9525e377c5e686b0b08bcca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/065a018d3b5c2c84a53db3347cca4e1b7fa362a6",
-                "reference": "065a018d3b5c2c84a53db3347cca4e1b7fa362a6",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/e440567339d5fe93d9525e377c5e686b0b08bcca",
+                "reference": "e440567339d5fe93d9525e377c5e686b0b08bcca",
                 "shasum": ""
             },
             "conflict": {
@@ -1879,7 +1871,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-11-01T20:01:47+00:00"
+            "time": "2020-11-07T16:07:08+00:00"
         },
         {
             "name": "sebastian/cli-parser",

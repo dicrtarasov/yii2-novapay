@@ -25,7 +25,7 @@
 
         "dicr/yii2-json": "~2.0",
         "dicr/yii2-helper": "~4.0",
-        "dicr/yii2-validate": "~2.1"
+        "dicr/yii2-validate": "~2.2"
     },
     "autoload": {
         "psr-4": {
@@ -42,6 +42,7 @@
         "phpunit/phpunit": "~9.4"
     },
     "repositories": [
+        {"type": "gitlab", "url": "https://gitlab.com/dicr/yii2-json.git"},
         {"type": "gitlab", "url": "https://gitlab.com/dicr/yii2-helper.git"},
         {"type": "gitlab", "url": "https://gitlab.com/dicr/yii2-validate.git"},
         {"type": "composer", "url": "https://asset-packagist.org"}

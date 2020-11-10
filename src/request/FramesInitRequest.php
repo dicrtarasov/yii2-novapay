@@ -3,18 +3,18 @@
  * @copyright 2019-2020 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 03.11.20 20:36:32
+ * @version 10.11.20 03:22:33
  */
 
 declare(strict_types = 1);
 
 namespace dicr\novapay\request;
 
+use dicr\json\EntityValidator;
 use dicr\novapay\Delivery;
 use dicr\novapay\NovaPayRequest;
 use dicr\novapay\Product;
 use dicr\validate\PhoneValidator;
-use dicr\validate\ValidateException;
 use yii\base\Exception;
 use yii\helpers\Json;
 
@@ -118,7 +118,6 @@ class FramesInitRequest extends NovaPayRequest
                 return '+' . (int)preg_replace('~[\D]+~', '', (string)$val);
             }, 'skipOnEmpty' => true],
 
-
             ['email', 'trim'],
             ['email', 'default'],
             ['email', 'email'],
@@ -144,48 +143,10 @@ class FramesInitRequest extends NovaPayRequest
             ['amount', 'filter', 'filter' => 'floatval'],
 
             ['products', 'default'],
-            ['products', function (string $attribute) {
-                $products = null;
-
-                if (! empty($this->products)) {
-                    if (is_array($this->products)) {
-                        foreach ($this->products as $i => $prod) {
-                            if (is_array($prod)) {
-                                $prod = new Product($prod);
-                            }
-
-                            if ($prod instanceof Product) {
-                                if (! $prod->validate()) {
-                                    $this->addError($attribute, (new ValidateException($prod))->getMessage());
-                                }
-                            } else {
-                                $this->addError($attribute, 'Товар должен быть элементом Product');
-                            }
-
-                            $products[] = $prod;
-                        }
-                    } else {
-                        $this->addError($attribute, 'Товары должны быть массивом');
-                    }
-                }
-
-                $this->products = $products;
-            }],
+            ['products', EntityValidator::class, 'class' => [Product::class]],
 
             ['delivery', 'required'],
-            ['delivery', function ($attribute) {
-                if (is_array($this->delivery)) {
-                    $this->delivery = new Delivery($this->delivery);
-                }
-
-                if ($this->delivery instanceof Delivery) {
-                    if (! $this->delivery->validate()) {
-                        $this->addError($attribute, (new ValidateException($this->delivery))->getMessage());
-                    }
-                } else {
-                    $this->addError($attribute, 'Некорректный тип информации о доставке');
-                }
-            }]
+            ['delivery', EntityValidator::class, 'class' => EntityValidator::class]
         ];
     }
 
