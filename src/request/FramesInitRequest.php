@@ -1,9 +1,9 @@
 <?php
 /*
- * @copyright 2019-2020 Dicr http://dicr.org
+ * @copyright 2019-2021 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 10.11.20 03:53:44
+ * @version 18.01.21 20:11:25
  */
 
 declare(strict_types = 1);
@@ -73,7 +73,7 @@ class FramesInitRequest extends NovaPayRequest
     /**
      * @inheritDoc
      */
-    public function attributeFields() : array
+    public function attributeFields(): array
     {
         return array_merge(parent::attributeFields(), [
             'firstName' => 'client_first_name',
@@ -87,7 +87,7 @@ class FramesInitRequest extends NovaPayRequest
     /**
      * @inheritDoc
      */
-    public function attributeEntities() : array
+    public function attributeEntities(): array
     {
         return [
             'products' => [Product::class],
@@ -98,7 +98,7 @@ class FramesInitRequest extends NovaPayRequest
     /**
      * @inheritDoc
      */
-    public function rules() : array
+    public function rules(): array
     {
         return [
             ['firstName', 'trim'],
@@ -114,16 +114,15 @@ class FramesInitRequest extends NovaPayRequest
             ['phone', 'default'],
             ['phone', PhoneValidator::class, 'country' => 38, 'region' => 44, 'formatOnValidate' => true,
                 'skipOnEmpty' => true],
-            ['phone', 'filter', 'filter' => function ($val) : string {
-                return '+' . (int)preg_replace('~[\D]+~', '', (string)$val);
-            }, 'skipOnEmpty' => true],
+            ['phone', 'filter', 'filter' => fn($val): string => '+' .
+                (int)preg_replace('~[\D]+~', '', (string)$val), 'skipOnEmpty' => true],
 
             ['email', 'trim'],
             ['email', 'default'],
             ['email', 'email'],
 
             ['metadata', 'default'],
-            ['metadata', function (string $attribute) {
+            ['metadata', function(string $attribute) {
                 if (empty($this->metadata)) {
                     $this->metadata = null;
                 } elseif (! is_array($this->metadata)) {
@@ -153,7 +152,7 @@ class FramesInitRequest extends NovaPayRequest
     /**
      * @inheritDoc
      */
-    protected function func() : string
+    protected function func(): string
     {
         return 'frames/init';
     }
@@ -164,7 +163,7 @@ class FramesInitRequest extends NovaPayRequest
      * @return FramesInitResponse
      * @throws Exception
      */
-    public function send() : FramesInitResponse
+    public function send(): FramesInitResponse
     {
         return new FramesInitResponse([
             'json' => parent::send()

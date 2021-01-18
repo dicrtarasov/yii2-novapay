@@ -1,9 +1,9 @@
 <?php
 /*
- * @copyright 2019-2020 Dicr http://dicr.org
+ * @copyright 2019-2021 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 10.11.20 03:26:30
+ * @version 18.01.21 20:09:08
  */
 
 declare(strict_types = 1);
@@ -17,7 +17,6 @@ use yii\web\ServerErrorHttpException;
 use function base64_decode;
 use function call_user_func;
 use function openssl_error_string;
-use function openssl_pkey_free;
 use function openssl_pkey_get_public;
 use function openssl_verify;
 
@@ -36,7 +35,7 @@ class CallbackController extends Controller
      *
      * @throws BadRequestHttpException|ServerErrorHttpException
      */
-    public function actionIndex() : void
+    public function actionIndex(): void
     {
         if (! Yii::$app->request->isPost) {
             throw new BadRequestHttpException();
@@ -68,26 +67,22 @@ class CallbackController extends Controller
      * @throws BadRequestHttpException
      * @throws ServerErrorHttpException
      */
-    private function verifySign(string $data, string $sign) : bool
+    private function verifySign(string $data, string $sign): bool
     {
         $key = openssl_pkey_get_public($this->module->serverKey);
         if ($key === false) {
             throw new ServerErrorHttpException('Некорректный публичный ключ сервера NovaPay');
         }
 
-        try {
-            $ret = openssl_verify($data, base64_decode($sign), $key);
-            if ($ret === 0) {
-                throw new BadRequestHttpException('Некорректная сигнатура');
-            }
-
-            if ($ret === 2) {
-                throw new ServerErrorHttpException('Ошибка SSL: ' . openssl_error_string());
-            }
-
-            return true;
-        } finally {
-            openssl_pkey_free($key);
+        $ret = openssl_verify($data, base64_decode($sign), $key);
+        if ($ret === 0) {
+            throw new BadRequestHttpException('Некорректная сигнатура');
         }
+
+        if ($ret === 2) {
+            throw new ServerErrorHttpException('Ошибка SSL: ' . openssl_error_string());
+        }
+
+        return true;
     }
 }

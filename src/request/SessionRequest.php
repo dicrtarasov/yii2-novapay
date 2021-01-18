@@ -1,9 +1,9 @@
 <?php
 /*
- * @copyright 2019-2020 Dicr http://dicr.org
+ * @copyright 2019-2021 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 10.11.20 03:53:28
+ * @version 18.01.21 20:11:27
  */
 
 declare(strict_types = 1);
@@ -58,7 +58,7 @@ class SessionRequest extends NovaPayRequest
     /**
      * @inheritDoc
      */
-    public function attributeFields() : array
+    public function attributeFields(): array
     {
         return array_merge(parent::attributeFields(), [
             'firstName' => 'client_first_name',
@@ -72,7 +72,7 @@ class SessionRequest extends NovaPayRequest
     /**
      * @inheritDoc
      */
-    public function rules() : array
+    public function rules(): array
     {
         return [
             ['firstName', 'trim'],
@@ -88,16 +88,15 @@ class SessionRequest extends NovaPayRequest
             ['phone', 'required'],
             ['phone', PhoneValidator::class, 'country' => 38, 'region' => 44, 'formatOnValidate' => true,
                 'skipOnEmpty' => false],
-            ['phone', 'filter', 'filter' => function ($val) : string {
-                return '+' . (int)preg_replace('~[\D]+~', '', (string)$val);
-            }],
+            ['phone', 'filter', 'filter' => fn($val): string => '+' .
+                (int)preg_replace('~[\D]+~', '', (string)$val)],
 
             ['email', 'trim'],
             ['email', 'default'],
             ['email', 'email'],
 
             ['metadata', 'default'],
-            ['metadata', function (string $attribute) {
+            ['metadata', function(string $attribute) {
                 if (! is_array($this->metadata)) {
                     $this->addError($attribute, 'Метаданные должны быть массивом');
                 }
@@ -112,7 +111,7 @@ class SessionRequest extends NovaPayRequest
     /**
      * @inheritDoc
      */
-    protected function func() : string
+    protected function func(): string
     {
         return 'session';
     }
@@ -123,7 +122,7 @@ class SessionRequest extends NovaPayRequest
      * @return string ID сессии
      * @throws Exception
      */
-    public function send() : string
+    public function send(): string
     {
         $data = parent::send();
 

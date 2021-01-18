@@ -1,9 +1,9 @@
 <?php
 /*
- * @copyright 2019-2020 Dicr http://dicr.org
+ * @copyright 2019-2021 Dicr http://dicr.org
  * @author Igor A Tarasov <develop@dicr.org>
  * @license MIT
- * @version 03.11.20 20:36:39
+ * @version 18.01.21 20:10:02
  */
 
 declare(strict_types = 1);
@@ -21,7 +21,6 @@ use yii\httpclient\Client;
 use function base64_encode;
 use function implode;
 use function openssl_error_string;
-use function openssl_pkey_free;
 use function openssl_pkey_get_private;
 use function openssl_sign;
 
@@ -51,18 +50,23 @@ abstract class NovaPayRequest extends JsonEntity
      *
      * @return string
      */
-    abstract protected function func() : string;
+    abstract protected function func(): string;
 
     /**
      * Возвращает ошибки SSL.
      *
      * @return string[]
      */
-    private static function opensslErrors() : array
+    private static function opensslErrors(): array
     {
         $errors = [];
 
-        while ($error = openssl_error_string()) {
+        while (true) {
+            $error = openssl_error_string();
+            if (empty($error)) {
+                break;
+            }
+
             $errors[] = $error;
         }
 
@@ -76,26 +80,21 @@ abstract class NovaPayRequest extends JsonEntity
      * @return string
      * @throws Exception
      */
-    private function createSign(string $json) : string
+    private function createSign(string $json): string
     {
         $pk = openssl_pkey_get_private($this->module->clientKey);
         if ($pk === false) {
             throw new Exception('Некорректный приватный ключ клиента');
         }
 
-        try {
-            $signature = '';
-
-            if (openssl_sign($json, $signature, $pk) === false) {
-                throw new Exception('Ошибка создания сигнатуры: ' .
-                    implode(";\n", self::opensslErrors())
-                );
-            }
-
-            return base64_encode($signature);
-        } finally {
-            openssl_pkey_free($pk);
+        $signature = '';
+        if (openssl_sign($json, $signature, $pk) === false) {
+            throw new Exception('Ошибка создания сигнатуры: ' .
+                implode(";\n", self::opensslErrors())
+            );
         }
+
+        return base64_encode($signature);
     }
 
     /**
@@ -114,9 +113,7 @@ abstract class NovaPayRequest extends JsonEntity
         $data = array_filter(array_merge([
             'merchant_id' => $this->module->merchantId,
             'callback_url' => Url::to('/' . $this->module->uniqueId . '/callback', true)
-        ], $this->getJson()), static function ($val) : bool {
-            return $val !== null && $val !== '' && $val !== [];
-        });
+        ], $this->getJson()), static fn($val): bool => $val !== null && $val !== '' && $val !== []);
 
         // кодируем данные в JSON
         $json = Json::encode($data);
